@@ -129,8 +129,8 @@ this is useful, for example, to estimate the difference between two weighted ave
 (e.g. across horizons or between men and woment).{p_end}
 
 {phang}{opt h:orizons(numlist)}: if specified, weighted averages/sums of treatment effects will be reported for each of these horizons separately
-(i.e. tau0 for the treatment period, tau1 for one period after treatment, etc.). 
-All horizons must be non-negative integers.{p_end}
+(i.e. tau0 for the treatment period, tau1 for one period after treatment, etc.). Horizons which are not specified will be ignored.
+Each horizon must a be non-negative integer.{p_end}
 
 {phang}{opt allh:orizons}: picks all non-negative horizons available in the sample.{p_end}
 
