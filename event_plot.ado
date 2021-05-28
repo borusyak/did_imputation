@@ -1,5 +1,5 @@
 *! event_plot: Plot coefficients from a staggered adoption event study analysis
-*! Version: May 26, 2021
+*! Version: May 28, 2021
 *! Author: Kirill Borusyak
 *! Please check the latest version at https://github.com/borusyak/did_imputation/
 *! Citation: Borusyak, Jaravel, and Spiess, "Revisiting Event Study Designs: Robust and Efficient Estimation" (2021)
@@ -14,6 +14,9 @@ syntax [anything(name=eqlist)] [, trimlag(numlist integer) trimlead(numlist inte
 		lag_opt3(string) lag_ci_opt3(string) lead_opt3(string) lead_ci_opt3(string) ///
 		lag_opt4(string) lag_ci_opt4(string) lead_opt4(string) lead_ci_opt4(string) ///
 		lag_opt5(string) lag_ci_opt5(string) lead_opt5(string) lead_ci_opt5(string) ///
+		lag_opt6(string) lag_ci_opt6(string) lead_opt6(string) lead_ci_opt6(string) ///
+		lag_opt7(string) lag_ci_opt7(string) lead_opt7(string) lead_ci_opt7(string) ///
+		lag_opt8(string) lag_ci_opt8(string) lead_opt8(string) lead_ci_opt8(string) ///
 		savecoef reportcommand noplot verbose alpha(real 0.05)]
 qui {	
 	// to-do: read dcdh or K_95; compatibility with the code from Goodman-Bacon, eventdd(?), did_multiplegt; use eventstudy_siegloch on options for many graphs; Burtch: ib4.rel_period_pos
@@ -31,6 +34,10 @@ qui {
 	cap estimates store `dot' // cap in case there are no current estimate (but plotting is done based on previously saved ones)
 		local rc_current = _rc
 	local eq_n : word count `eqlist'
+	if (`eq_n'>8) {
+	    di as error "Combining at most 8 graphs are currently supported"
+		error 198
+	}
 	
 	if ("`perturb'"=="") {
 	    local perturb 0
@@ -211,21 +218,33 @@ qui {
 			local lag_opt3 color(forest_green) `lag_opt3'
 			local lag_opt4 color(dkorange) `lag_opt4'
 			local lag_opt5 color(teal) `lag_opt5'
+			local lag_opt6 color(cranberry) `lag_opt6'
+			local lag_opt7 color(lavender) `lag_opt7'
+			local lag_opt8 color(khaki) `lag_opt8'
 			local lead_opt1 color(navy) `lead_opt1'
 			local lead_opt2 color(maroon) `lead_opt2'
 			local lead_opt3 color(forest_green) `lead_opt3'
 			local lead_opt4 color(dkorange) `lead_opt4'
 			local lead_opt5 color(teal) `lead_opt5'
+			local lead_opt6 color(cranberry) `lead_opt6'
+			local lead_opt7 color(lavender) `lead_opt7'
+			local lead_opt8 color(khaki) `lead_opt8'
 			local lag_ci_opt1 color(navy%45 navy%45) `lag_ci_opt1'
 			local lag_ci_opt2 color(maroon%45 maroon%45) `lag_ci_opt2'
 			local lag_ci_opt3 color(forest_green%45 forest_green%45) `lag_ci_opt3'
 			local lag_ci_opt4 color(dkorange%45 dkorange%45) `lag_ci_opt4'
 			local lag_ci_opt5 color(teal%45 teal%45) `lag_ci_opt5'
+			local lag_ci_opt6 color(cranberry%45 cranberry%45) `lag_ci_opt6'
+			local lag_ci_opt7 color(lavender%45 lavender%45) `lag_ci_opt7'
+			local lag_ci_opt8 color(khaki%45 khaki%45) `lag_ci_opt8'
 			local lead_ci_opt1 color(navy%45 navy%45) `lead_ci_opt1'
 			local lead_ci_opt2 color(maroon%45 maroon%45) `lead_ci_opt2'
 			local lead_ci_opt3 color(forest_green%45 forest_green%45) `lead_ci_opt3'
 			local lead_ci_opt4 color(dkorange%45 dkorange%45) `lead_ci_opt4'
 			local lead_ci_opt5 color(teal%45 teal%45) `lead_ci_opt5'
+			local lead_ci_opt6 color(cranberry%45 cranberry%45) `lead_ci_opt6'
+			local lead_ci_opt7 color(lavender%45 lavender%45) `lead_ci_opt7'
+			local lead_ci_opt8 color(khaki%45 khaki%45) `lead_ci_opt8'
 		}
 		local legend_opt region(lstyle(none)) `legend_opt'
 	}

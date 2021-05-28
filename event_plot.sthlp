@@ -132,7 +132,7 @@ Variables {it:__event_H#}, {it:__event_pos#}, {it:__event_coef#}, {it:__event_lo
 {marker combine}{...}
 {title:Combining plots}
 
-{phang}Up to 5 models can be combined, e.g. to show how the estimates differ between {cmd:did_imputation} and OLS, or between males and females.
+{phang}Up to 8 models can be combined, e.g. to show how the estimates differ between {cmd:did_imputation} and OLS, or between males and females.
 
 {phang}With several models, additional options are available, while the syntax and meaning of others is modified: {p_end}
 
