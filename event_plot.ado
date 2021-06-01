@@ -1,5 +1,5 @@
 *! event_plot: Plot coefficients from a staggered adoption event study analysis
-*! Version: May 28, 2021
+*! Version: June 1, 2021
 *! Author: Kirill Borusyak
 *! Please check the latest version at https://github.com/borusyak/did_imputation/
 *! Citation: Borusyak, Jaravel, and Spiess, "Revisiting Event Study Designs: Robust and Efficient Estimation" (2021)
@@ -30,7 +30,7 @@ qui {
 	if ("`shift'"=="") local shift 0
 	if ("`savecoef'"=="savecoef") cap drop __event*
 
-	tempname dot bmat Vmat
+	tempname dot bmat Vmat bmat_current Vmat_current
 	cap estimates store `dot' // cap in case there are no current estimate (but plotting is done based on previously saved ones)
 		local rc_current = _rc
 	local eq_n : word count `eqlist'
@@ -166,23 +166,31 @@ qui {
 		gen `lo`eq'' = .
 		label var `H`eq'' "Periods since treatment"
 		if (`maxlag'>=0) forvalues h=0/`maxlag' {
-			cap replace `coef`eq'' = `bmat'[1,"`prefix_lag'`h'`postfix_lag'"] if `H`eq''==`h'
+			matrix `bmat_current' = J(1,1,.)
+			cap matrix `bmat_current' = `bmat'[1,"`prefix_lag'`h'`postfix_lag'"]
+			cap replace `coef`eq'' = `bmat_current'[1,1] if `H`eq''==`h' // because `bmat'[1,"`prefix_lag'`h'`postfix_lag'"] is only a matrix expression on macs			
+			
 			if ("`ciplottype'"!="none" & "`vregime'"!="none") {
-				local se = .
-				if ("`vregime'"=="matrix") cap local se = `Vmat'["`prefix_lag'`h'`postfix_lag'","`prefix_lag'`h'`postfix_lag'"]^0.5
-					else cap local se = `Vmat'[1,"`prefix_lag'`h'`postfix_lag'"]^0.5
-				cap replace `hi`eq'' = `bmat'[1,"`prefix_lag'`h'`postfix_lag'"]+invnorm(1-`alpha'/2)*`se' if `H`eq''==`h'
-				cap replace `lo`eq'' = `bmat'[1,"`prefix_lag'`h'`postfix_lag'"]-invnorm(1-`alpha'/2)*`se' if `H`eq''==`h'
+				matrix `Vmat_current' = J(1,1,.)
+				if ("`vregime'"=="matrix") cap matrix `Vmat_current' = `Vmat'["`prefix_lag'`h'`postfix_lag'","`prefix_lag'`h'`postfix_lag'"]
+					else cap matrix `Vmat_current' = `Vmat'[1,"`prefix_lag'`h'`postfix_lag'"]
+				local se = `Vmat_current'[1,1]^0.5
+				cap replace `hi`eq'' = `bmat_current'[1,1]+invnorm(1-`alpha'/2)*`se' if `H`eq''==`h'
+				cap replace `lo`eq'' = `bmat_current'[1,1]-invnorm(1-`alpha'/2)*`se' if `H`eq''==`h'
 			}
 		}
 		if (`maxlead'>0) forvalues h=1/`maxlead' {
-			cap replace `coef`eq'' = `bmat'[1,"`prefix_lead'`h'`postfix_lead'"] if `H`eq''==-`h'
+			matrix `bmat_current' = J(1,1,.)
+			cap matrix `bmat_current' = `bmat'[1,"`prefix_lead'`h'`postfix_lead'"]
+			cap replace `coef`eq'' = `bmat_current'[1,1] if `H`eq''==-`h'
+			
 			if ("`ciplottype'"!="none" & "`vregime'"!="none") {
-				local se196 = .
-				if ("`vregime'"=="matrix") cap local se = `Vmat'["`prefix_lead'`h'`postfix_lead'","`prefix_lead'`h'`postfix_lead'"]^0.5
-					else cap local se = `Vmat'[1,"`prefix_lead'`h'`postfix_lead'"]^0.5
-				cap replace `hi`eq'' = `bmat'[1,"`prefix_lead'`h'`postfix_lead'"]+invnorm(1-`alpha'/2)*`se' if `H`eq''==-`h'
-				cap replace `lo`eq'' = `bmat'[1,"`prefix_lead'`h'`postfix_lead'"]-invnorm(1-`alpha'/2)*`se' if `H`eq''==-`h'
+				matrix `Vmat_current' = J(1,1,.)
+				if ("`vregime'"=="matrix") cap matrix `Vmat_current' = `Vmat'["`prefix_lead'`h'`postfix_lead'","`prefix_lead'`h'`postfix_lead'"]
+					else cap matrix `Vmat_current' = `Vmat'[1,"`prefix_lead'`h'`postfix_lead'"]
+				local se = `Vmat_current'[1,1]^0.5
+				cap replace `hi`eq'' = `bmat_current'[1,1]+invnorm(1-`alpha'/2)*`se' if `H`eq''==-`h'
+				cap replace `lo`eq'' = `bmat_current'[1,1]-invnorm(1-`alpha'/2)*`se' if `H`eq''==-`h'
 			}
 		}
 		count if !mi(`coef`eq'')
