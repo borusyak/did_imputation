@@ -6,10 +6,10 @@
 	Author: Kirill Borusyak (UCL), k.borusyak@ucl.ac.uk
 	
 	You'll need the following commands:
-		- did_imputation (Borusyak et al. 2021): currently available at https://github.com/borusyak/did_imputation
+		- did_imputation (Borusyak et al. 2021): available on SSC
 		- did_multiplegt (de Chaisemartin and D'Haultfoeuille 2020): available on SSC
 		- eventstudyinteract (San and Abraham 2020): available on SSC
-		- scdid (Callaway and Sant'Anna 2020): currently available at https://friosavila.github.io/playingwithstata/main_csdid.html
+		- scdid (Callaway and Sant'Anna 2020) v1.5: currently available at https://friosavila.github.io/playingwithstata/main_csdid.html
 
 */
 
@@ -56,7 +56,7 @@ gen gvar = cond(Ei==., 0, Ei) // group variable as required for the csdid comman
 csdid Y, ivar(i) time(t) gvar(gvar) notyet
 estat event, estore(cs) // this produces and stores the estimates at the same time
 event_plot cs, default_look graph_opt(xtitle("Periods since the event") ytitle("Average causal effect") xlabel(-14(1)5) ///
-	title("Callaway and Sant'Anna (2020)")) stub_lag(E#) stub_lead(E_#) together
+	title("Callaway and Sant'Anna (2020)")) stub_lag(T+#) stub_lead(T-#) together
 
 // Estimation with eventstudyinteract of Sun and Abraham (2020)
 sum Ei
@@ -92,7 +92,7 @@ qui forvalues h = 0/5 {
 
 // Combine all plots using the stored estimates
 event_plot btrue# bjs dcdh_b#dcdh_v cs sa_b#sa_v ols, ///
-	stub_lag(tau# tau# Effect_# E# L#event L#event) stub_lead(pre# pre# Placebo_# E_# F#event F#event) plottype(scatter) ciplottype(rcap) ///
+	stub_lag(tau# tau# Effect_# T+# L#event L#event) stub_lead(pre# pre# Placebo_# T-# F#event F#event) plottype(scatter) ciplottype(rcap) ///
 	together perturb(-0.325(0.13)0.325) trimlead(5) noautolegend ///
 	graph_opt(title("Event study estimators in a simulated panel (300 units, 15 periods)", size(medlarge)) ///
 		xtitle("Periods since the event") ytitle("Average causal effect") xlabel(-5(1)5) ylabel(0(1)3) ///
