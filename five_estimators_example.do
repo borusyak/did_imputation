@@ -9,7 +9,7 @@
 		- did_imputation (Borusyak et al. 2021): available on SSC
 		- did_multiplegt (de Chaisemartin and D'Haultfoeuille 2020): available on SSC
 		- eventstudyinteract (San and Abraham 2020): available on SSC
-		- scdid (Callaway and Sant'Anna 2020) v1.5: currently available at https://friosavila.github.io/playingwithstata/main_csdid.html
+		- csdid (Callaway and Sant'Anna 2020) v1.5: available on SSC
 
 */
 
