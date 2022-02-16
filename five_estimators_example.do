@@ -9,7 +9,7 @@
 		- did_imputation (Borusyak et al. 2021): available on SSC
 		- did_multiplegt (de Chaisemartin and D'Haultfoeuille 2020): available on SSC
 		- eventstudyinteract (San and Abraham 2020): available on SSC
-		- csdid (Callaway and Sant'Anna 2020) v1.5: available on SSC
+		- csdid (Callaway and Sant'Anna 2020): available on SSC
 
 */
 
@@ -35,6 +35,7 @@ gen D = K>=0 & Ei!=. 						// treatment indicator
 gen tau = cond(D==1, (t-12.5), 0) 			// heterogeneous treatment effects (in this case vary over calendar periods)
 gen eps = rnormal()							// error term
 gen Y = i + 3*t + tau*D + eps 				// the outcome (FEs play no role since all methods control for them)
+//save five_estimators_data, replace
 
 // Estimation with did_imputation of Borusyak et al. (2021)
 did_imputation Y i t Ei, allhorizons pretrend(5)
@@ -56,7 +57,7 @@ gen gvar = cond(Ei==., 0, Ei) // group variable as required for the csdid comman
 csdid Y, ivar(i) time(t) gvar(gvar) notyet
 estat event, estore(cs) // this produces and stores the estimates at the same time
 event_plot cs, default_look graph_opt(xtitle("Periods since the event") ytitle("Average causal effect") xlabel(-14(1)5) ///
-	title("Callaway and Sant'Anna (2020)")) stub_lag(T+#) stub_lead(T-#) together
+	title("Callaway and Sant'Anna (2020)")) stub_lag(Tp#) stub_lead(Tm#) together
 
 // Estimation with eventstudyinteract of Sun and Abraham (2020)
 sum Ei
@@ -92,7 +93,7 @@ qui forvalues h = 0/5 {
 
 // Combine all plots using the stored estimates
 event_plot btrue# bjs dcdh_b#dcdh_v cs sa_b#sa_v ols, ///
-	stub_lag(tau# tau# Effect_# T+# L#event L#event) stub_lead(pre# pre# Placebo_# T-# F#event F#event) plottype(scatter) ciplottype(rcap) ///
+	stub_lag(tau# tau# Effect_# Tp# L#event L#event) stub_lead(pre# pre# Placebo_# Tm# F#event F#event) plottype(scatter) ciplottype(rcap) ///
 	together perturb(-0.325(0.13)0.325) trimlead(5) noautolegend ///
 	graph_opt(title("Event study estimators in a simulated panel (300 units, 15 periods)", size(medlarge)) ///
 		xtitle("Periods since the event") ytitle("Average causal effect") xlabel(-5(1)5) ylabel(0(1)3) ///
