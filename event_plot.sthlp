@@ -194,7 +194,8 @@ for individual models (e.g. colors). Similar options without an index, e.g. {opt
         {cmd:event_plot bjs ., stub_lag(tau# L#event) stub_lead(pre# F#event) together plottype(scatter) default_look} ///
 		{cmd:graph_opt(xtitle("Days since the event") ytitle("OLS coefficients") xlabel(-14(7)14 20))}
 		
-    4) For estimation + plotting with {help csdid}, {help did_multiplegt}, and {help eventstudyinteract}, see our example on GitHub.
+    4) For estimation + plotting with {help csdid}, {help did_multiplegt}, and {help eventstudyinteract}, as well as {help did_imputation} 
+        and traditional OLS, see our example on GitHub: five_estimators_example.do at {browse "https://github.com/borusyak/did_imputation"}
 
 
 {title:Missing Features}
@@ -202,6 +203,11 @@ for individual models (e.g. colors). Similar options without an index, e.g. {opt
 {phang}- More flexibility for {opt stub_lag} and {opt stub_lead} for reading the coefficients of conventional event studies{p_end}
 {phang}- Automatic support of alternative robust estimators: {cmd:did_multiplegt}, {cmd:csdid}, and {cmd:eventstudyinteract}{p_end}
 {phang}- Allow {opt plottype} and {opt together} to vary across the combined plots{p_end}
+{phang}- Make the command consistent with {cmd:did_multiplegt} with the {opt longdiff_placebo} option{p_end}
+{phang}- Throw an error when neither default_look nor graphical options are specified{p_end}
+{phang}- In old Stata versions, avoid using transparent colors{p_end}
+{phang}- After {cmd:eventstudyinteract}, allow to display omitted categories{p_end}
+{phang}- Add the addzero() option to accommodate the omitted category in, e.g., {cmd:eventstudyinteract}
 
 {pstd}
 If you are interested in discussing these or others, please {help event_plot##author:contact me}.

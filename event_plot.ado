@@ -3,9 +3,8 @@
 *! Author: Kirill Borusyak
 *! Please check the latest version at https://github.com/borusyak/did_imputation/
 *! Citation: Borusyak, Jaravel, and Spiess, "Revisiting Event Study Designs: Robust and Efficient Estimation" (2021)
-
-cap program drop event_plot
 program define event_plot
+version 13.0
 syntax [anything(name=eqlist)] [, trimlag(numlist integer) trimlead(numlist integer) default_look stub_lag(string) stub_lead(string) plottype(string) ciplottype(string) together ///
 		graph_opt(string asis) noautolegend legend_opt(string) perturb(numlist) shift(numlist integer) ///
 		lag_opt(string) lag_ci_opt(string) lead_opt(string) lead_ci_opt(string) ///
@@ -116,6 +115,7 @@ qui {
 		local maxlead = 0 // zero leads = nothing since they start from 1, while lags start from 0
 		local allvars : colnames `bmat'
 		foreach v of local allvars {
+			if (substr("`v'",1,2)=="o.") local v = substr("`v'",3,.)
 			if (`have_lag') {
 				if (substr("`v'",1,`lprefix_lag')=="`prefix_lag'" & substr("`v'",-`lpostfix_lag',.)=="`postfix_lag'") {
 					if !mi(real(substr("`v'",`lprefix_lag'+1,length("`v'")-`lprefix_lag'-`lpostfix_lag'))) {
