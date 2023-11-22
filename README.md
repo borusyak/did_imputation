@@ -1,7 +1,7 @@
 # did_imputation
 Event studies: robust and efficient estimation, testing, and plotting
 
-This is a Stata package for Borusyak, Jaravel, and Spiess (2021), "Revisiting Event Study Designs: Robust and Efficient Estimation"
+This is a Stata package for Borusyak, Jaravel, and Spiess (2023), "Revisiting Event Study Designs: Robust and Efficient Estimation"
 
 The package includes:
 1) *did_imputation* command: for estimating causal effects & testing for pre-trends with the imputation method of Borusyak et al.
