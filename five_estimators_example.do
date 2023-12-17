@@ -7,9 +7,13 @@
 	
 	You'll need the following commands:
 		- did_imputation (Borusyak et al. 2021): available on SSC
+			- Dependencies: ftools, reghdfe
 		- did_multiplegt (de Chaisemartin and D'Haultfoeuille 2020): available on SSC
 		- eventstudyinteract (San and Abraham 2020): available on SSC
+			- Dependencies: avar
 		- csdid (Callaway and Sant'Anna 2020): available on SSC
+			- Dependencies: drdid
+		- event_plot (Borusyak et al. 2021): available on SSC
 
 */
 
